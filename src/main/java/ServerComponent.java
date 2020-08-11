@@ -17,6 +17,7 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
 import controllers.IndexController;
+import controllers.TodoController;
 
 public class ServerComponent extends AbstractHandler {
     
@@ -46,13 +47,17 @@ public class ServerComponent extends AbstractHandler {
         
             case "/":
                 response.setStatus(HttpServletResponse.SC_OK);
-                response.setContentType("text/html;"); // client requested HTML page
+                response.setContentType("text/html;");
                 response.getWriter().println(IndexController.handle(""));
                 lgr.info("Finished processing " + command);
                 return;
                 
             case "/addTodo":
-                
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.setContentType("text/html;");
+                response.getWriter().println(TodoController.addTodo(request));
+                lgr.info("Finished processing " + command);
+                return;    
             
             default:
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
