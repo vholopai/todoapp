@@ -1,7 +1,5 @@
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.Properties;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -23,13 +21,6 @@ public class ServerComponent extends AbstractHandler {
     
     private static Logger lgr;
     private static final int PORT = 80;
-    private static final Set<String> commands = new HashSet<>();
-    static {
-        commands.add("/");
-        commands.add("/addTodo");
-        commands.add("/removeTodo");
-        commands.add("/markAsDone");
-    }
     
     /**
      * HTTP requests coming from the user are handled in this method
@@ -54,7 +45,7 @@ public class ServerComponent extends AbstractHandler {
                 
             case "/addTodo":
                 response.setStatus(HttpServletResponse.SC_OK);
-                response.setContentType("text/html;");
+                response.setContentType("application/json; charset=utf-8");
                 response.getWriter().println(TodoController.addTodo(request));
                 lgr.info("Finished processing " + command);
                 return;    

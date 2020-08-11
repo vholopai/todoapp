@@ -1,5 +1,43 @@
 <html>
-<body>
-${username}
-</body>
+	<body>
+
+		<script type="text/javascript">
+		
+			function post(okFunction, failFunction, uri, data) {
+
+			    var xhttp = new XMLHttpRequest();
+			    xhttp.onreadystatechange = function() {
+			        if (this.readyState > 3 && this.status == 200) {
+			        	okFunction(this);
+			        }
+			        else if (this.readyState > 3 && this.status == 404) {
+			            failFunction(this);
+			        }			        
+			    };
+			    xhttp.open("POST", uri); 
+			    //xhttp.withCredentials = true; // false = synchronous
+			    xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			    xhttp.send(data);
+			}
+			
+			function addTodo(content) {
+				post(addTodoCallback, failCallback, "/addTodo", "text=" + encodeURIComponent(content));
+			}
+			
+			function addTodoCallback() {
+				alert("success");
+			}
+			
+			function failCallback() {
+				alert("failed");
+			}
+			
+		</script>
+
+		${todoitem}
+		
+		<button onclick="addTodo('test todo item')">Add Todo</button>
+		
+	</body>
+	
 </html>
