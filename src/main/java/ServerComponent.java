@@ -1,5 +1,7 @@
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -20,28 +22,50 @@ public class ServerComponent extends AbstractHandler {
     
     private static Logger lgr;
     private static final int PORT = 80;
+    private static final Set<String> commands = new HashSet<>();
+    static {
+        commands.add("/");
+        commands.add("/addTodo");
+        commands.add("/removeTodo");
+        commands.add("/markAsDone");
+    }
     
     /**
      * HTTP requests coming from the user are handled in this method
      */
     @Override
-    public void handle(String target, Request baseRequest, HttpServletRequest request,
+    public void handle(String command, Request baseRequest, HttpServletRequest request,
             HttpServletResponse response) throws IOException, ServletException 
-    {
-        lgr.info("Got HTTP request " + baseRequest.getOriginalURI());
+    {        
+        lgr.info("Got HTTP request " + command);
 
-        response.setStatus(HttpServletResponse.SC_OK); // by default give 200 OK response 
-
-        /* main page */
-        response.setContentType("text/html;"); // client requested HTML page
-        response.getWriter().println(IndexController.render(""));
+        // should not be passed to other handlers
         baseRequest.setHandled(true);
-        /* main page */
+   
+        switch(command) {
         
-        lgr.info("Finished processing");
-        return;
+            case "/":
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.setContentType("text/html;"); // client requested HTML page
+                response.getWriter().println(IndexController.handle(""));
+                lgr.info("Finished processing " + command);
+                return;
+                
+            case "/addTodo":
+                
+            
+            default:
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                response.getWriter().println("Not found");
+                return;
+        }
+        
+        
+        
+        
+
     }
-    
+
     /**
      * Start the server
      */
