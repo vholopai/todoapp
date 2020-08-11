@@ -1,6 +1,12 @@
 <html>
 	<body>
-
+		<!--   ${todoitem} -->
+		
+		<button onclick="addTodo('test todo item')">Add Todo</button>
+		
+		<div id="todoItems"></div>
+		
+		
 		<script type="text/javascript">
 		
 			function post(okFunction, failFunction, uri, data) {
@@ -20,6 +26,28 @@
 			    xhttp.send(data);
 			}
 			
+			function getAllTodosCallback(data) {
+				var obj;
+				try {
+					obj = JSON.parse(data.responseText);
+				} catch (err) {
+					console.log("Unable to parse JSON " + data.responseText);
+					return;
+				}
+				var parentDiv = document.getElementById('todoItems');
+				parentDiv.innerHTML = "";
+				for (var key in obj) {
+					if (obj.hasOwnProperty(key)) {
+			    		var todoTxt = document.createTextNode(obj[key].msg);
+			    		var newDiv = document.createElement("div");
+			    		newDiv.appendChild(todoTxt);
+			    		parentDiv.appendChild(newDiv);
+					  	//alert(obj[key].id);
+					  	//alert(obj[key].msg);
+					}
+				}	
+			}
+			
 			function addTodo(content) {
 				post(addTodoCallback, failCallback, "/addTodo", "text=" + encodeURIComponent(content));
 			}
@@ -32,11 +60,12 @@
 				alert("failed");
 			}
 			
+			// self executing function here
+			(function() {
+				post(getAllTodosCallback, failCallback, "/getAllTodos", "");
+			})();
+			
 		</script>
-
-		${todoitem}
-		
-		<button onclick="addTodo('test todo item')">Add Todo</button>
 		
 	</body>
 	

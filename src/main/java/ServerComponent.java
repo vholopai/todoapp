@@ -48,7 +48,14 @@ public class ServerComponent extends AbstractHandler {
                 response.setContentType("application/json; charset=utf-8");
                 response.getWriter().println(TodoController.addTodo(request));
                 lgr.info("Finished processing " + command);
-                return;    
+                return;   
+                
+            case "/getAllTodos":
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.setContentType("application/json; charset=utf-8");
+                response.getWriter().println(TodoController.getAllTodoItems().toString());
+                lgr.info("Finished processing " + command);
+                return;                    
             
             default:
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
