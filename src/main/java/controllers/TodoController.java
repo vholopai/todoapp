@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,7 +22,7 @@ public class TodoController extends Controller {
     private static final Logger lgr = LogManager.getLogger(TodoController.class);
 
     private static int readIndexFile() {
-        try (BufferedReader br = new BufferedReader(new FileReader(Constants.DATAPATH + "counter.txt"))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(Constants.TODOPATH + "counter.txt"))) {
             String line;
             if ((line = br.readLine()) != null) {
                 return Integer.parseInt(line);
@@ -32,7 +34,7 @@ public class TodoController extends Controller {
     }
     
     private static void writeIndexFile(int indexNr) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(Constants.DATAPATH + "counter.txt", false))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(Constants.TODOPATH + "counter.txt", false))) {
             writer.append(Integer.toString(indexNr));
             writer.close();
         } catch (IOException e) {
@@ -41,20 +43,12 @@ public class TodoController extends Controller {
     }
     
     private static void writeTodoItem(String text, int indexNr) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(Constants.DATAPATH + indexNr + ".todo", false))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(Constants.TODOPATH + indexNr + ".todo", false))) {
             writer.append(text);
             writer.close();
         } catch (IOException e) {
             lgr.error("Unable to write " + indexNr + ".todo");
         }
-    }
-    
-    public static String addTodo(HttpServletRequest request) {
-        int nextItemIndex = readIndexFile() + 1;
-        String text = request.getParameter("text");
-        writeTodoItem(text, nextItemIndex);
-        writeIndexFile(nextItemIndex);
-        return "ok";
     }
     
     private static JSONObject readTodoFile(File file) {
@@ -74,7 +68,7 @@ public class TodoController extends Controller {
     }
     
     public static JSONArray getAllTodoItems() {
-        final File folder = new File(Constants.DATAPATH);
+        final File folder = new File(Constants.TODOPATH);
         JSONArray todoItems = new JSONArray();
         for (final File file : folder.listFiles()) {
             if (file.getName().endsWith(".todo")) {
@@ -84,5 +78,23 @@ public class TodoController extends Controller {
         return todoItems;
     }
     
+    public static JSONArray addTodo(HttpServletRequest request) {
+        int nextItemIndex = readIndexFile() + 1;
+        String text = request.getParameter("text");
+        writeTodoItem(text, nextItemIndex);
+        writeIndexFile(nextItemIndex);
+        return getAllTodoItems();
+    }
     
+    public static JSONArray setAsDone(HttpServletRequest request) {
+        try {
+            int id = Integer.parseInt(request.getParameter("text"));
+            Files.move 
+                   (Paths.get(Constants.TODOPATH + id + ".todo"),  
+                    Paths.get(Constants.DONEPATH + id + ".todo"));
+        } catch (IOException e) {
+            lgr.error("Unable to set as done");
+        } 
+        return getAllTodoItems();
+    }
 }

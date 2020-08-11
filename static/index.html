@@ -1,16 +1,31 @@
 <html>
+	<head>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">		
+	</head>
+
 	<body>
-		<!--   ${todoitem} -->
+	
+		<!-- TODO item template -->
+		<template>
+			<div class="card" id="0" style="width:50%;display:none">
+				<div class="card-body">
+					<p class="card-text"></p>
+				    <button class="btn btn-lg btn-info" 
+				    	onclick="setAsDone(this)"><i class="fas fa-check"></i>Set as DONE</button>
+				</div>
+			</div>
+		</template>
 		
 		<button onclick="addTodo('test todo item')">Add Todo</button>
 		
-		<div id="todoItems"></div>
-		
+		<!-- Container for TODO items -->
+		<div id="todoItems">
+		</div>
 		
 		<script type="text/javascript">
 		
 			function post(okFunction, failFunction, uri, data) {
-
 			    var xhttp = new XMLHttpRequest();
 			    xhttp.onreadystatechange = function() {
 			        if (this.readyState > 3 && this.status == 200) {
@@ -38,23 +53,29 @@
 				parentDiv.innerHTML = "";
 				for (var key in obj) {
 					if (obj.hasOwnProperty(key)) {
-			    		var todoTxt = document.createTextNode(obj[key].msg);
-			    		var newDiv = document.createElement("div");
-			    		newDiv.appendChild(todoTxt);
-			    		parentDiv.appendChild(newDiv);
-					  	//alert(obj[key].id);
-					  	//alert(obj[key].msg);
+			    		var temp = document.getElementsByTagName("template")[0];
+			    		var clone = temp.content.cloneNode(true);
+			    		parentDiv.appendChild(clone);
+			    		var cloneDiv = document.getElementById("0");
+			    		// todo id goes here:
+			    		cloneDiv.id = obj[key].id;
+			    		cloneDiv.style.display = "block";
+			    		// todo text content goes here:
+			    		cloneDiv.getElementsByClassName('card-body')[0]
+			    				.getElementsByClassName('card-text')[0]
+			    				.innerHTML = obj[key].msg;
 					}
 				}	
 			}
+
+			function setAsDone(elem) {
+				post(getAllTodosCallback, failCallback, "/setAsDone", "text=" + elem.parentNode.parentNode.id);
+			}
 			
 			function addTodo(content) {
-				post(addTodoCallback, failCallback, "/addTodo", "text=" + encodeURIComponent(content));
+				post(getAllTodosCallback, failCallback, "/addTodo", "text=" + encodeURIComponent(content));
 			}
 			
-			function addTodoCallback() {
-				alert("success");
-			}
 			
 			function failCallback() {
 				alert("failed");

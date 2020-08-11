@@ -27,35 +27,33 @@ public class ServerComponent extends AbstractHandler {
      */
     @Override
     public void handle(String command, Request baseRequest, HttpServletRequest request,
-            HttpServletResponse response) throws IOException, ServletException 
-    {        
-        lgr.info("Got HTTP request " + command);
-
-        // should not be passed to other handlers
-        baseRequest.setHandled(true);
-   
-        switch(command) {
+            HttpServletResponse response) throws IOException, ServletException {
         
+        lgr.info("Got HTTP request " + command);
+        
+        baseRequest.setHandled(true); // should not be passed to other handlers
+        response.setStatus(HttpServletResponse.SC_OK); // default response is OK
+        response.setContentType("application/json; charset=utf-8"); // default content type is JSON
+
+        switch(command) {     
             case "/":
-                response.setStatus(HttpServletResponse.SC_OK);
-                response.setContentType("text/html;");
+                response.setContentType("text/html;"); // the landing page gives HTML
                 response.getWriter().println(IndexController.handle(""));
-                lgr.info("Finished processing " + command);
-                return;
+                break;
+                
+            // JSON responses:
+                
+            case "/setAsDone":
+                response.getWriter().println(TodoController.setAsDone(request).toString());
+                break;
                 
             case "/addTodo":
-                response.setStatus(HttpServletResponse.SC_OK);
-                response.setContentType("application/json; charset=utf-8");
-                response.getWriter().println(TodoController.addTodo(request));
-                lgr.info("Finished processing " + command);
-                return;   
+                response.getWriter().println(TodoController.addTodo(request).toString());
+                break;
                 
             case "/getAllTodos":
-                response.setStatus(HttpServletResponse.SC_OK);
-                response.setContentType("application/json; charset=utf-8");
                 response.getWriter().println(TodoController.getAllTodoItems().toString());
-                lgr.info("Finished processing " + command);
-                return;                    
+                break;
             
             default:
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -63,10 +61,8 @@ public class ServerComponent extends AbstractHandler {
                 return;
         }
         
-        
-        
-        
-
+        lgr.info("Finished processing " + command);
+        return;
     }
 
     /**
