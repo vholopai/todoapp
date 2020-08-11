@@ -56,8 +56,9 @@ public class ServerComponent extends AbstractHandler {
                 break;
             
             default:
+                response.setContentType("text/html;");
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                response.getWriter().println("Not found");
+                response.getWriter().println("404 Not found");
                 return;
         }
         
