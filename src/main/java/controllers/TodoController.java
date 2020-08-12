@@ -51,12 +51,12 @@ public class TodoController extends Controller {
         }
     }
     
-    private static JSONObject readTodoFile(File file) {
+    private static JSONObject readItemFromFile(File file, boolean isTodoItem) {
         StringBuilder sb = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
-            if ((line = br.readLine()) != null) {
-                sb.append(line);
+            while ((line = br.readLine()) != null) {
+                sb.append(line + " ");
             }
         } catch (Exception e) {
             lgr.error("Unable to read " + file.getAbsolutePath());
@@ -64,18 +64,25 @@ public class TodoController extends Controller {
         JSONObject todoItem = new JSONObject();
         todoItem.put("id", file.getName().split("\\.")[0]);
         todoItem.put("msg", sb.toString());
+        todoItem.put("type", (isTodoItem ? "todo" : "done"));        
         return todoItem;
     }
     
-    public static JSONArray getAllTodoItems() {
-        final File folder = new File(Constants.TODOPATH);
-        JSONArray todoItems = new JSONArray();
-        for (final File file : folder.listFiles()) {
+    public static JSONArray getAllTodoAndDoneItems() {
+        JSONArray items = new JSONArray();
+        File folder = new File(Constants.TODOPATH);
+        for (File file : folder.listFiles()) {
             if (file.getName().endsWith(".todo")) {
-                todoItems.put(readTodoFile(file));
+                items.put(readItemFromFile(file, true));
             }
         }
-        return todoItems;
+        folder = new File(Constants.DONEPATH);
+        for (File file : folder.listFiles()) {
+            if (file.getName().endsWith(".todo")) {
+                items.put(readItemFromFile(file, false));
+            }
+        }        
+        return items;
     }
     
     public static JSONArray addTodo(HttpServletRequest request) {
@@ -83,7 +90,7 @@ public class TodoController extends Controller {
         String text = request.getParameter("text");
         writeTodoItem(text, nextItemIndex);
         writeIndexFile(nextItemIndex);
-        return getAllTodoItems();
+        return getAllTodoAndDoneItems();
     }
     
     public static JSONArray setAsDone(HttpServletRequest request) {
@@ -93,8 +100,33 @@ public class TodoController extends Controller {
                    (Paths.get(Constants.TODOPATH + id + ".todo"),  
                     Paths.get(Constants.DONEPATH + id + ".todo"));
         } catch (IOException e) {
-            lgr.error("Unable to set as done");
+            lgr.error("Unable to set as DONE", e);
         } 
-        return getAllTodoItems();
+        return getAllTodoAndDoneItems();
     }
+    
+    public static JSONArray setAsTodo(HttpServletRequest request) {
+        try {
+            int id = Integer.parseInt(request.getParameter("text"));
+            Files.move 
+                   (Paths.get(Constants.DONEPATH + id + ".todo"),  
+                    Paths.get(Constants.TODOPATH + id + ".todo"));
+        } catch (IOException e) {
+            lgr.error("Unable to set as TODO", e);
+        } 
+        return getAllTodoAndDoneItems();
+    }    
+    
+    public static JSONArray removeTodo(HttpServletRequest request) {
+        int id = -1;
+        try {
+            id = Integer.parseInt(request.getParameter("text"));
+            Files.move 
+                   (Paths.get(Constants.TODOPATH + id + ".todo"),  
+                    Paths.get(Constants.REMOVEDPATH + id + ".todo"));
+        } catch (IOException e) {
+            lgr.error("Unable to remove TODO id=" + id, e);
+        } 
+        return getAllTodoAndDoneItems();
+    }       
 }
