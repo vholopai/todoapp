@@ -4,11 +4,11 @@
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 		
 		<!-- needed for the small icons -->
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
         
-        <!-- needed for the TODO add modal box -->
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>		
+		<!-- needed for the TODO add modal box -->
+		<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>		
 	</head>
 
 	<body style="margin:10px">
@@ -64,33 +64,24 @@
 		<!-- Use two columns, one for TODO, one for TODO -->
 		<div class="container">
   			<div class="row">
-  			
     			<div class="col"> 
-
     				<h2>TODO</h2>
     				<!-- Button to open TODO adding modal -->
 					<button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#todoModal">
 		 				<i class="fas fa-plus"></i> Add TODO
 					</button>
 					<br><br>
-					
 					<!-- Container for TODO items -->
 					<div id="todoItems">
 					</div>
-					
 				</div>
-
 				<div class="col">
-				
 					<h2>DONE</h2>
 					<br><br><br>
-
 					<!-- Container for DONE items -->							
 					<div id="doneItems">
 					</div>
-					
 				</div>
-				
 			</div>
 		</div>
 		
