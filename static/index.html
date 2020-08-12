@@ -12,9 +12,9 @@
 	</head>
 
 	<body style="margin:10px">
-	
+
+		<!-- TODO item template -->	
 		<template>
-			<!-- TODO item template -->
 			<div class="card" id="0" style="display:none">
 				<div class="card-body">
 					<p class="card-text" style="font-size: 150%"></p>
@@ -28,8 +28,8 @@
 			</div>
 		</template>
 			
-		<template>			
-			<!-- DONE item template -->
+		<!-- DONE item template -->			
+		<template>
 			<div class="card" id="00" style="display:none">
 				<div class="card-body">
 					<p class="card-text" style="font-size: 150%"></p>
@@ -61,7 +61,7 @@
 		  	</div>
 		</div>	
 		
-		<!-- Use two columns, one for TODO, one for TODO -->
+		<!-- Use two columns, one for TODO items, one for DONE items -->
 		<div class="container">
   			<div class="row">
     			<div class="col"> 
@@ -99,7 +99,7 @@
 			        }			        
 			    };
 			    xhttp.open("POST", uri); 
-			    //xhttp.withCredentials = true; // false = synchronous
+			    //xhttp.withCredentials = true;
 			    xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 			    xhttp.send(data);
 			}
@@ -112,13 +112,10 @@
 					console.log("Unable to parse JSON " + data.responseText);
 					return;
 				}
-				
 				var todoDiv = document.getElementById('todoItems');
 				todoDiv.innerHTML = "";
-
 				var doneDiv = document.getElementById('doneItems');
 				doneDiv.innerHTML = "";
-				
 				for (var key in obj) {
 					if (obj.hasOwnProperty(key)) {
 						var type = obj[key].type;
