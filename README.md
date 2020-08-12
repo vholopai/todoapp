@@ -3,7 +3,7 @@ TODO web app
 Saves TODO items as ASCII files on disk.
 
 
-The basic message flow is as follows:
+The basic message flow is as follows (open the file in a wider view to view properly):
 
                    |------------------------SERVER----------------------------------------|
 
