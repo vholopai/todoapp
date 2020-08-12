@@ -38,7 +38,7 @@ public class MainRequestRouter extends AbstractHandler {
         switch(command) {     
             case "/":
                 response.setContentType("text/html;"); // the landing page gives HTML
-                response.getWriter().println(IndexController.handle(""));
+                response.getWriter().println(IndexController.handle());
                 break;
                 
             // The following give JSON responses
