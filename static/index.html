@@ -43,32 +43,32 @@
 		<!-- Modal to add TODO item -->
 		<div class="modal fade" id="todoModal" tabindex="-1" role="dialog" aria-labelledby="todoModalLabel" aria-hidden="true">
 			<div class="modal-dialog modal-lg" role="document">
-		    	<div class="modal-content">
-		      		<div class="modal-header">
-		        		<h5 class="modal-title" id="todoModalLabel">Add new TODO item</h5>
-		        		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-		          		<span aria-hidden="true">&times;</span>
-		        		</button>
-		      		</div>
-		      		<div class="modal-body">
-		        		<textarea id="newTodoText" class="form-control" style="min-width: 100%" placeholder="Type TODO item text here..."></textarea>
-		      		</div>
-		      		<div class="modal-footer">
-		        		<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-		        		<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="addTodo()">Add TODO</button>
-		      		</div>
-		    	</div>
-		  	</div>
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="todoModalLabel">Add new TODO item</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		          			<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<textarea id="newTodoText" class="form-control" style="min-width: 100%" placeholder="Type TODO item text here..."></textarea>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="addTodo()">Add TODO</button>
+					</div>
+				</div>
+			</div>
 		</div>	
 		
 		<!-- Use two columns, one for TODO items, one for DONE items -->
 		<div class="container">
-  			<div class="row">
-    			<div class="col"> 
-    				<h2>TODO</h2>
-    				<!-- Button to open TODO adding modal -->
+			<div class="row">
+				<div class="col"> 
+					<h2>TODO</h2>
+					<!-- Button to open TODO adding modal -->
 					<button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#todoModal">
-		 				<i class="fas fa-plus"></i> Add TODO
+						<i class="fas fa-plus"></i> Add TODO
 					</button>
 					<br><br>
 					<!-- Container for TODO items -->
@@ -177,7 +177,5 @@
 			})();
 			
 		</script>
-		
 	</body>
-	
 </html>
