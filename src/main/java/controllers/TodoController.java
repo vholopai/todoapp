@@ -47,7 +47,7 @@ public class TodoController extends Controller {
             writer.append(text);
             writer.close();
         } catch (IOException e) {
-            lgr.error("Unable to write " + indexNr + ".todo");
+            lgr.error("Unable to write {}.todo", indexNr);
         }
     }
     
@@ -59,7 +59,7 @@ public class TodoController extends Controller {
                 sb.append(line + " ");
             }
         } catch (Exception e) {
-            lgr.error("Unable to read " + file.getAbsolutePath());
+            lgr.error("Unable to read {}", file.getAbsolutePath());
         }
         JSONObject todoItem = new JSONObject();
         todoItem.put("id", file.getName().split("\\.")[0]);
@@ -125,7 +125,7 @@ public class TodoController extends Controller {
                    (Paths.get(Constants.TODOPATH + id + ".todo"),  
                     Paths.get(Constants.REMOVEDPATH + id + ".todo"));
         } catch (IOException e) {
-            lgr.error("Unable to remove TODO id=" + id, e);
+            lgr.error("Unable to remove TODO id={}", id, e);
         } 
         return getAllTodoAndDoneItems();
     }       

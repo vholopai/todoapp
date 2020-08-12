@@ -19,7 +19,7 @@ public class Controller {
                 sb.append(line + "\n");
             }
         } catch (Exception e) {
-            lgr.error("Unable to read template, fileName=" + fileName);
+            lgr.error("Unable to read template, fileName={}", fileName);
         }
         return sb.toString();
     }

@@ -29,7 +29,7 @@ public class MainRequestRouter extends AbstractHandler {
     public void handle(String command, Request baseRequest, HttpServletRequest request,
             HttpServletResponse response) throws IOException, ServletException {
         
-        lgr.info("Got HTTP request " + command);
+        lgr.info("Got HTTP request {}", command);
         
         baseRequest.setHandled(true); // should not be passed to other handlers
         response.setStatus(HttpServletResponse.SC_OK); // default response is OK
@@ -70,7 +70,7 @@ public class MainRequestRouter extends AbstractHandler {
                 return;
         }
         
-        lgr.info("Finished processing " + command);
+        lgr.info("Finished processing {}", command);
         return;
     }
 
