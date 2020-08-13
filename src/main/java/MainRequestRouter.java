@@ -44,19 +44,19 @@ public class MainRequestRouter extends AbstractHandler {
             // The following give JSON responses
                 
             case "/setAsTodo": // move a DONE task to TODO
-                response.getWriter().println(TodoController.setAsTodo(request).toString());
+                response.getWriter().println(TodoController.moveItemFromDoneToTodo(request).toString());
                 break;                
 
             case "/removeTodo": // move a TODO task to REMOVED
-                response.getWriter().println(TodoController.removeTodo(request).toString());
+                response.getWriter().println(TodoController.moveItemFromTodoToRemoved(request).toString());
                 break;
                 
             case "/setAsDone": // move a TODO task to DONE
-                response.getWriter().println(TodoController.setAsDone(request).toString());
+                response.getWriter().println(TodoController.moveItemFromTodoToDone(request).toString());
                 break;
                 
             case "/addTodo":
-                response.getWriter().println(TodoController.addTodo(request).toString());
+                response.getWriter().println(TodoController.createNewTodoItem(request).toString());
                 break;
                 
             case "/getAllTodos":

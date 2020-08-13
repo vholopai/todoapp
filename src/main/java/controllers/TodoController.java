@@ -25,7 +25,7 @@ import utils.Constants;
 public class TodoController extends Controller {
     private static final Logger lgr = LogManager.getLogger(TodoController.class);
 
-    private static int readIndexFile() {
+    private static int readTodoItemCounter() {
         try (BufferedReader br = new BufferedReader(new FileReader(Constants.TODOPATH + "counter.txt"))) {
             String line;
             if ((line = br.readLine()) != null) {
@@ -37,7 +37,7 @@ public class TodoController extends Controller {
         return -1;
     }
     
-    private static void writeIndexFile(int indexNr) {
+    private static void writeTodoItemCounter(int indexNr) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(Constants.TODOPATH + "counter.txt", false))) {
             writer.append(Integer.toString(indexNr));
             writer.close();
@@ -46,7 +46,7 @@ public class TodoController extends Controller {
         }
     }
     
-    private static void writeTodoItem(String text, int indexNr) {
+    private static void writeTodoItemText(String text, int indexNr) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(Constants.TODOPATH + indexNr + ".todo", false))) {
             writer.append(text);
             writer.close();
@@ -99,15 +99,15 @@ public class TodoController extends Controller {
         return items;
     }
     
-    public static JSONArray addTodo(HttpServletRequest request) {
-        int nextItemIndex = readIndexFile() + 1;
+    public static JSONArray createNewTodoItem(HttpServletRequest request) {
+        int nextItemIndex = readTodoItemCounter() + 1;
         String text = request.getParameter("text");
-        writeTodoItem(text, nextItemIndex);
-        writeIndexFile(nextItemIndex);
+        writeTodoItemText(text, nextItemIndex);
+        writeTodoItemCounter(nextItemIndex);
         return getAllTodoAndDoneItems();
     }
     
-    public static JSONArray setAsDone(HttpServletRequest request) {
+    public static JSONArray moveItemFromTodoToDone(HttpServletRequest request) {
         try {
             int id = Integer.parseInt(request.getParameter("text"));
             Files.move 
@@ -119,7 +119,7 @@ public class TodoController extends Controller {
         return getAllTodoAndDoneItems();
     }
     
-    public static JSONArray setAsTodo(HttpServletRequest request) {
+    public static JSONArray moveItemFromDoneToTodo(HttpServletRequest request) {
         try {
             int id = Integer.parseInt(request.getParameter("text"));
             Files.move 
@@ -131,7 +131,7 @@ public class TodoController extends Controller {
         return getAllTodoAndDoneItems();
     }    
     
-    public static JSONArray removeTodo(HttpServletRequest request) {
+    public static JSONArray moveItemFromTodoToRemoved(HttpServletRequest request) {
         int id = -1;
         try {
             id = Integer.parseInt(request.getParameter("text"));
