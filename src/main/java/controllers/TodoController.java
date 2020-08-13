@@ -25,8 +25,10 @@ import utils.Constants;
 public class TodoController extends Controller {
     private static final Logger lgr = LogManager.getLogger(TodoController.class);
 
-    private static int readTodoItemCounter() {
-        try (BufferedReader br = new BufferedReader(new FileReader(Constants.TODOPATH + "counter.txt"))) {
+    private static int readTodoItemCount() {
+        try (BufferedReader br = new BufferedReader(
+                new FileReader(Constants.TODOPATH + "counter.txt"))) 
+        {
             String line;
             if ((line = br.readLine()) != null) {
                 return Integer.parseInt(line);
@@ -37,21 +39,23 @@ public class TodoController extends Controller {
         return -1;
     }
     
-    private static void writeTodoItemCounter(int indexNr) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(Constants.TODOPATH + "counter.txt", false))) {
-            writer.append(Integer.toString(indexNr));
-            writer.close();
+    private static void writeTodoItemCount(int todoItemCount) {
+        try (BufferedWriter wr = new BufferedWriter(
+                new FileWriter(Constants.TODOPATH + "counter.txt", false))) 
+        {
+            wr.append(Integer.toString(todoItemCount)); // wr will be auto-closed in Java SE 7 and later
         } catch (IOException e) {
             lgr.error("Unable to write counter.txt");
         }
     }
     
-    private static void writeTodoItemText(String text, int indexNr) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(Constants.TODOPATH + indexNr + ".todo", false))) {
-            writer.append(text);
-            writer.close();
+    private static void writeTodoItemText(String text, int todoItemCount) {
+        try (BufferedWriter wr = new BufferedWriter(
+                new FileWriter(Constants.TODOPATH + todoItemCount + ".todo", false))) 
+        {
+            wr.append(text); // wr will be auto-closed in Java SE 7 and later
         } catch (IOException e) {
-            lgr.error("Unable to write {}.todo", indexNr);
+            lgr.error("Unable to write {}.todo", todoItemCount);
         }
     }
     
@@ -100,10 +104,10 @@ public class TodoController extends Controller {
     }
     
     public static JSONArray createNewTodoItem(HttpServletRequest request) {
-        int nextItemIndex = readTodoItemCounter() + 1;
+        int todoItemCount = readTodoItemCount() + 1;
         String text = request.getParameter("text");
-        writeTodoItemText(text, nextItemIndex);
-        writeTodoItemCounter(nextItemIndex);
+        writeTodoItemText(text, todoItemCount);
+        writeTodoItemCount(todoItemCount);
         return getAllTodoAndDoneItems();
     }
     
