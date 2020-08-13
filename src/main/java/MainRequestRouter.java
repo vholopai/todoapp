@@ -41,7 +41,8 @@ public class MainRequestRouter extends AbstractHandler {
                 response.getWriter().println(IndexController.handle());
                 break;
                 
-            // The following give JSON responses
+            // The following give JSON responses, TODO FIXME: we should send 404 or 500 in case of failure
+            // Now these always give 200 OK
                 
             case "/setAsTodo": // move a DONE task to TODO
                 response.getWriter().println(TodoController.moveItemFromDoneToTodo(request).toString());
