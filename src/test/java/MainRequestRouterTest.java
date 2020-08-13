@@ -48,14 +48,18 @@ public class MainRequestRouterTest {
                 new BufferedReader(
                         new InputStreamReader(
                                 response.getEntity().getContent()));
-        int responsePayloadLength = 0;
+        int httpResponsePayloadLength = 0;
         String line;
         while ((line = br.readLine()) != null) {
+            // remove all line breaks, since OS dependent line break syntax
+            // might cause differences in results
             line = line.replace("\n", "").replace("\r", "");
-            responsePayloadLength += line.length();
+            httpResponsePayloadLength += line.length();
         }
-        String fileTest = Controller.readTemplate("index.html");
-        fileTest = fileTest.replace("\n", "").replace("\r", "");
-        assertEquals(responsePayloadLength, fileTest.length());
+        String indexFile = Controller.readTemplate("index.html");
+        // remove all line breaks, since OS dependent line break syntax
+        // might cause differences in results
+        indexFile = indexFile.replace("\n", "").replace("\r", "");
+        assertEquals(httpResponsePayloadLength, indexFile.length());
     }
 }
