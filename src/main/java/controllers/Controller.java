@@ -11,7 +11,8 @@ import utils.Constants;
 public class Controller {
     private static final Logger lgr = LogManager.getLogger(Controller.class);
     
-    protected static String readTemplate(String fileName) {
+    // public due to testing purposes
+    public static String readTemplate(String fileName) {
         StringBuilder sb = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new FileReader(Constants.VIEWPATH + fileName))) {
             String line;

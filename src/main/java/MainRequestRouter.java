@@ -19,7 +19,7 @@ import controllers.TodoController;
 
 public class MainRequestRouter extends AbstractHandler {
     
-    private static Logger lgr;
+    static Logger lgr;
     private static final int PORT = 80;
     
     /**
@@ -34,8 +34,8 @@ public class MainRequestRouter extends AbstractHandler {
         baseRequest.setHandled(true); // should not be passed to other handlers
         response.setStatus(HttpServletResponse.SC_OK); // default response is OK
         response.setContentType("application/json; charset=utf-8"); // default content type is JSON
-
-        switch(command) {     
+        
+        switch(command) {
             case "/":
                 response.setContentType("text/html;"); // the landing page gives HTML
                 response.getWriter().println(IndexController.handle());
@@ -90,7 +90,7 @@ public class MainRequestRouter extends AbstractHandler {
     /**
      * Just an example logger configuration. Change to FileAppender if needed.
      */
-    private static void initLogger() {
+     static void initLogger() {
         Properties properties = new Properties();
         properties.setProperty("status", "INFO");
         properties.setProperty("appenders", "CONSOLE");

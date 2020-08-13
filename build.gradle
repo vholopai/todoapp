@@ -30,6 +30,10 @@ dependencies {
 	compile group: 'org.apache.logging.log4j', name: 'log4j-web', version: '2.13.3'
 	
 	// json
-	compile group: 'org.json', name: 'json', version: '20180813'    
+	compile group: 'org.json', name: 'json', version: '20180813'   
+	
+	// for end-to-end junit tests
+	compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.12'
+	 
 }
 
