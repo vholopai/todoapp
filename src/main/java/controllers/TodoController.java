@@ -25,7 +25,7 @@ import utils.Constants;
 public class TodoController extends Controller {
     private static final Logger lgr = LogManager.getLogger(TodoController.class);
 
-    private static int readTodoItemCount() {
+    private static int readItemCount() {
         try (BufferedReader br = new BufferedReader(
                 new FileReader(Constants.TODOPATH + "counter.txt"))) 
         {
@@ -39,7 +39,7 @@ public class TodoController extends Controller {
         return -1;
     }
     
-    private static void writeTodoItemCount(int todoItemCount) {
+    private static void writeItemCount(int todoItemCount) {
         try (BufferedWriter wr = new BufferedWriter(
                 new FileWriter(Constants.TODOPATH + "counter.txt", false))) 
         {
@@ -104,10 +104,10 @@ public class TodoController extends Controller {
     }
     
     public static JSONArray createNewTodoItem(HttpServletRequest request) {
-        int todoItemCount = readTodoItemCount() + 1;
+        int todoItemCount = readItemCount() + 1;
         String text = request.getParameter("text");
         writeTodoItemText(text, todoItemCount);
-        writeTodoItemCount(todoItemCount);
+        writeItemCount(todoItemCount);
         return getAllTodoAndDoneItems();
     }
     
