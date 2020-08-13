@@ -25,7 +25,7 @@ import utils.Constants;
 public class TodoController extends Controller {
     private static final Logger lgr = LogManager.getLogger(TodoController.class);
 
-    private static int readItemCount() {
+    static int readItemCount() {
         try (BufferedReader br = new BufferedReader(
                 new FileReader(Constants.TODOPATH + "counter.txt"))) 
         {
@@ -39,7 +39,7 @@ public class TodoController extends Controller {
         return -1;
     }
     
-    private static void writeItemCount(int todoItemCount) {
+    static void writeItemCount(int todoItemCount) {
         try (BufferedWriter wr = new BufferedWriter(
                 new FileWriter(Constants.TODOPATH + "counter.txt", false))) 
         {
@@ -64,7 +64,7 @@ public class TodoController extends Controller {
         try (BufferedReader br = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = br.readLine()) != null) {
-                sb.append(line + " ");
+                sb.append(line + "\n");
             }
         } catch (Exception e) {
             lgr.error("Unable to read {}", file.getAbsolutePath());
@@ -111,40 +111,24 @@ public class TodoController extends Controller {
         return getAllTodoAndDoneItems();
     }
     
-    public static JSONArray moveItemFromTodoToDone(HttpServletRequest request) {
-        try {
-            int id = Integer.parseInt(request.getParameter("text"));
-            Files.move 
-                   (Paths.get(Constants.TODOPATH + id + ".todo"),  
-                    Paths.get(Constants.DONEPATH + id + ".todo"));
-        } catch (IOException e) {
-            lgr.error("Unable to set as DONE", e);
-        } 
+    public static JSONArray moveItemFromTodoToDone(HttpServletRequest request) throws IOException {
+        int id = Integer.parseInt(request.getParameter("text"));
+        Files.move(Paths.get(Constants.TODOPATH + id + ".todo"),  
+                   Paths.get(Constants.DONEPATH + id + ".todo"));
         return getAllTodoAndDoneItems();
     }
     
-    public static JSONArray moveItemFromDoneToTodo(HttpServletRequest request) {
-        try {
-            int id = Integer.parseInt(request.getParameter("text"));
-            Files.move 
-                   (Paths.get(Constants.DONEPATH + id + ".todo"),  
-                    Paths.get(Constants.TODOPATH + id + ".todo"));
-        } catch (IOException e) {
-            lgr.error("Unable to set as TODO", e);
-        } 
+    public static JSONArray moveItemFromDoneToTodo(HttpServletRequest request) throws IOException {
+        int id = Integer.parseInt(request.getParameter("text"));
+        Files.move(Paths.get(Constants.DONEPATH + id + ".todo"),  
+                   Paths.get(Constants.TODOPATH + id + ".todo"));
         return getAllTodoAndDoneItems();
     }    
     
-    public static JSONArray moveItemFromTodoToRemoved(HttpServletRequest request) {
-        int id = -1;
-        try {
-            id = Integer.parseInt(request.getParameter("text"));
-            Files.move 
-                   (Paths.get(Constants.TODOPATH + id + ".todo"),  
-                    Paths.get(Constants.REMOVEDPATH + id + ".todo"));
-        } catch (IOException e) {
-            lgr.error("Unable to remove TODO id={}", id, e);
-        } 
+    public static JSONArray moveItemFromTodoToRemoved(HttpServletRequest request) throws IOException {
+        int id = Integer.parseInt(request.getParameter("text"));
+        Files.move(Paths.get(Constants.TODOPATH + id + ".todo"),  
+                   Paths.get(Constants.REMOVEDPATH + id + ".todo"));
         return getAllTodoAndDoneItems();
     }       
 }

@@ -41,27 +41,43 @@ public class MainRequestRouter extends AbstractHandler {
                 response.getWriter().println(IndexController.handle());
                 break;
                 
-            // The following give JSON responses, TODO FIXME: we should send 404 or 500 in case of failure
-            // Now these always give 200 OK
+            // JSON responses:
                 
             case "/setAsTodo": // move a DONE task to TODO
-                response.getWriter().println(TodoController.moveItemFromDoneToTodo(request).toString());
+                try { // in theory should never fail, but send 500 error if fails
+                    response.getWriter().println(
+                            TodoController.moveItemFromDoneToTodo(request).toString());
+                } catch (Exception e) {
+                    response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);                    
+                }
                 break;                
 
             case "/removeTodo": // move a TODO task to REMOVED
-                response.getWriter().println(TodoController.moveItemFromTodoToRemoved(request).toString());
+                try {
+                    response.getWriter().println(
+                            TodoController.moveItemFromTodoToRemoved(request).toString());
+                } catch (Exception e) {
+                    response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                }
                 break;
                 
             case "/setAsDone": // move a TODO task to DONE
-                response.getWriter().println(TodoController.moveItemFromTodoToDone(request).toString());
+                try {
+                    response.getWriter().println(
+                            TodoController.moveItemFromTodoToDone(request).toString());
+                } catch (Exception e) {
+                    response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                }
                 break;
                 
             case "/addTodo":
-                response.getWriter().println(TodoController.createNewTodoItem(request).toString());
+                response.getWriter().println(
+                        TodoController.createNewTodoItem(request).toString());
                 break;
                 
             case "/getAllTodos":
-                response.getWriter().println(TodoController.getAllTodoAndDoneItems().toString());
+                response.getWriter().println(
+                        TodoController.getAllTodoAndDoneItems().toString());
                 break;
             
             default:
