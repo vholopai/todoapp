@@ -8,6 +8,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -71,10 +75,20 @@ public class TodoController extends Controller {
     public static JSONArray getAllTodoAndDoneItems() {
         JSONArray items = new JSONArray();
         File folder = new File(Constants.TODOPATH);
+        List<String> todoFileNames = new ArrayList<>();
+        // We want to show TODO items in order always.
+        // Oldest TODO items (lowest ID number in file name) are shown first in list.
+        // Hence, first collect the file names to list, sort it, and then read the file contents.
         for (File file : folder.listFiles()) {
             if (file.getName().endsWith(".todo")) {
-                items.put(readItemFromFile(file, true));
+                todoFileNames.add(file.getName());
             }
+        }
+        List<String> sortedTodoFileNames = todoFileNames.stream()
+                                            .sorted(Comparator.naturalOrder())
+                                            .collect(Collectors.toList());
+        for (String fileName : sortedTodoFileNames) {
+            items.put(readItemFromFile(new File(Constants.TODOPATH + fileName), true));
         }
         folder = new File(Constants.DONEPATH);
         for (File file : folder.listFiles()) {
