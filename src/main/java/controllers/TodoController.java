@@ -77,8 +77,7 @@ public class TodoController extends Controller {
         return item;
     }
     
-    public static JSONArray getAllTodoAndDoneItems() {
-        JSONArray items = new JSONArray();
+    private static void getTodoItems(JSONArray items) {
         File folder = new File(Constants.TODOPATH);
         List<String> todoFileNames = new ArrayList<>();
         // We want to show TODO items in order always.
@@ -89,16 +88,19 @@ public class TodoController extends Controller {
                 todoFileNames.add(file.getName());
             }
         }
-        List<String> sortedTodoFileNames = todoFileNames.stream()
-                                            .sorted(Comparator.naturalOrder())
-                                            .collect(Collectors.toList());
+        List<String> sortedTodoFileNames = 
+                todoFileNames.stream().sorted(Comparator.naturalOrder())
+                                      .collect(Collectors.toList());
         for (String fileName : sortedTodoFileNames) {
             JSONObject todoItem = readItemFromFile(new File(Constants.TODOPATH + fileName), true);
             if (todoItem != null) {
                 items.put(todoItem);
             }
         }
-        folder = new File(Constants.DONEPATH);
+    }
+    
+    private static void getDoneItems(JSONArray items) {
+        File folder = new File(Constants.DONEPATH);
         for (File file : folder.listFiles()) {
             if (file.getName().endsWith(".todo")) {
                 JSONObject doneItem = readItemFromFile(file, true);
@@ -106,7 +108,13 @@ public class TodoController extends Controller {
                     items.put(readItemFromFile(file, false));
                 }
             }
-        }        
+        }
+    }
+    
+    public static JSONArray getAllTodoAndDoneItems() {
+        JSONArray items = new JSONArray();
+        getTodoItems(items);
+        getDoneItems(items);
         return items;
     }
     
