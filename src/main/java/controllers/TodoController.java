@@ -68,12 +68,13 @@ public class TodoController extends Controller {
             }
         } catch (Exception e) {
             lgr.error("Unable to read {}", file.getAbsolutePath());
+            return null;
         }
-        JSONObject todoItem = new JSONObject();
-        todoItem.put("id", file.getName().split("\\.")[0]);
-        todoItem.put("msg", sb.toString());
-        todoItem.put("type", (isTodoItem ? "todo" : "done"));        
-        return todoItem;
+        JSONObject item = new JSONObject();
+        item.put("id", file.getName().split("\\.")[0]);
+        item.put("msg", sb.toString());
+        item.put("type", (isTodoItem ? "todo" : "done"));        
+        return item;
     }
     
     public static JSONArray getAllTodoAndDoneItems() {
@@ -92,12 +93,18 @@ public class TodoController extends Controller {
                                             .sorted(Comparator.naturalOrder())
                                             .collect(Collectors.toList());
         for (String fileName : sortedTodoFileNames) {
-            items.put(readItemFromFile(new File(Constants.TODOPATH + fileName), true));
+            JSONObject todoItem = readItemFromFile(new File(Constants.TODOPATH + fileName), true);
+            if (todoItem != null) {
+                items.put(todoItem);
+            }
         }
         folder = new File(Constants.DONEPATH);
         for (File file : folder.listFiles()) {
             if (file.getName().endsWith(".todo")) {
-                items.put(readItemFromFile(file, false));
+                JSONObject doneItem = readItemFromFile(file, true);
+                if (doneItem != null) {
+                    items.put(readItemFromFile(file, false));
+                }
             }
         }        
         return items;
