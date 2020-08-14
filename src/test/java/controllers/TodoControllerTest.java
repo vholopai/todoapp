@@ -34,7 +34,12 @@ public class TodoControllerTest {
     public void a_addTodoTest() {
         System.out.println(Constants.TODOPATH);
         HttpServletRequest mock = new MockRequest("text", "test todo content");
-        TodoController.createNewTodoItem(mock);
+        try {
+            TodoController.createNewTodoItem(mock);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         int itemCount = TodoController.readItemCount();
         assertEquals(itemCount, 1);
     }

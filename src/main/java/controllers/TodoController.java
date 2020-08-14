@@ -103,8 +103,11 @@ public class TodoController extends Controller {
         return items;
     }
     
-    public static JSONArray createNewTodoItem(HttpServletRequest request) {
+    public static JSONArray createNewTodoItem(HttpServletRequest request) throws IOException {
         int todoItemCount = readItemCount() + 1;
+        if (todoItemCount < 1) { // unable to read item count?
+            throw new IOException();
+        }
         String text = request.getParameter("text");
         writeTodoItemText(text, todoItemCount);
         writeItemCount(todoItemCount);

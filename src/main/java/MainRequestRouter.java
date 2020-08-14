@@ -71,8 +71,12 @@ public class MainRequestRouter extends AbstractHandler {
                 break;
                 
             case "/addTodo":
-                response.getWriter().println(
+                try {
+                    response.getWriter().println(
                         TodoController.createNewTodoItem(request).toString());
+                } catch (Exception e) {
+                    response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                }
                 break;
                 
             case "/getAllTodos":
