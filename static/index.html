@@ -89,6 +89,7 @@
 	<!-- javascript code -->
 	<script type="text/javascript">
 	
+		// send a HTTP POST request to the server
 		function post(okFunction, failFunction, uri, data) {
 		    var xhttp = new XMLHttpRequest();
 		    xhttp.onreadystatechange = function() {
@@ -105,6 +106,7 @@
 		    xhttp.send(data);
 		}
 			
+		// render the (todo and done) items we got from the server as JSON response
 		function getAllTodosCallback(data) {
 			var obj;
 			try {
@@ -175,7 +177,7 @@
 			alert("Failed with code " + code);
 		}
 			
-		// self executing function here
+		// after page load, get all
 		(function() {
 			post(getAllTodosCallback, failCallback, "/getAllTodos", "");
 		})();
