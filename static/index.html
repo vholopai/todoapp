@@ -131,7 +131,8 @@
 						// todo text content goes here:
 						cloneDiv.getElementsByClassName('card-body')[0]
 							.getElementsByClassName('card-text')[0]
-							.innerHTML = obj[key].msg.replace(/(?:\r\n|\r|\n)/g, '<br>');
+								.innerHTML = obj[key].id + ". " +
+									obj[key].msg.replace(/(?:\r\n|\r|\n)/g, '<br>');
 					}
 					else { // done item
 						var temp = document.getElementsByTagName("template")[1]; // done template
@@ -144,7 +145,8 @@
 						// done text content goes here:
 						cloneDiv.getElementsByClassName('card-body')[0]
 							.getElementsByClassName('card-text')[0]
-							.innerHTML = obj[key].msg.replace(/(?:\r\n|\r|\n)/g, '<br>');						
+								.innerHTML = obj[key].id + ". " +
+									obj[key].msg.replace(/(?:\r\n|\r|\n)/g, '<br>');						
 					}
 				}
 			}	

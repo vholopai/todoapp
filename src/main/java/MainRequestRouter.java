@@ -43,7 +43,7 @@ public class MainRequestRouter extends AbstractHandler {
                 
             // JSON responses:
                 
-            case "/setAsTodo": // move a DONE task to TODO
+            case "/setAsTodo": // move a done task to todo
                 try { // in theory should never fail, but send 500 error if fails
                     response.getWriter().println(
                             TodoController.moveItemFromDoneToTodo(request).toString());
@@ -52,7 +52,7 @@ public class MainRequestRouter extends AbstractHandler {
                 }
                 break;                
 
-            case "/removeTodo": // move a TODO task to REMOVED
+            case "/removeTodo": // move a todo task to REMOVED
                 try {
                     response.getWriter().println(
                             TodoController.moveItemFromTodoToRemoved(request).toString());
@@ -61,7 +61,7 @@ public class MainRequestRouter extends AbstractHandler {
                 }
                 break;
                 
-            case "/setAsDone": // move a TODO task to DONE
+            case "/setAsDone": // move a todo task to DONE
                 try {
                     response.getWriter().println(
                             TodoController.moveItemFromTodoToDone(request).toString());

@@ -37,11 +37,10 @@ public class TodoControllerTest {
         try {
             TodoController.createNewTodoItem(mock);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         int itemCount = TodoController.readItemCount();
-        assertEquals(itemCount, 1);
+        assertEquals(1, itemCount);
     }
     
     @Test
@@ -49,7 +48,7 @@ public class TodoControllerTest {
         JSONArray items = TodoController.getAllTodoAndDoneItems();
         JSONObject o = (JSONObject) items.get(0);
         assertTrue(o.get("msg").toString().startsWith("test todo content"));
-        assertEquals(o.get("type"), "todo");
+        assertEquals("todo", o.get("type"));
     }
     
     @Test
@@ -58,13 +57,12 @@ public class TodoControllerTest {
         try {
             TodoController.moveItemFromTodoToDone(mock);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         JSONArray items = TodoController.getAllTodoAndDoneItems();
         JSONObject o = (JSONObject) items.get(0);
         assertTrue(o.get("msg").toString().startsWith("test todo content"));
-        assertEquals(o.get("type"), "done"); // should be changed
+        assertEquals("done", o.get("type")); // should be changed
     }
     
     @Test
@@ -73,13 +71,12 @@ public class TodoControllerTest {
         try {
             TodoController.moveItemFromDoneToTodo(mock);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         JSONArray items = TodoController.getAllTodoAndDoneItems();
         JSONObject o = (JSONObject) items.get(0);
         assertTrue(o.get("msg").toString().startsWith("test todo content"));
-        assertEquals(o.get("type"), "todo"); // should be changed again
+        assertEquals("todo", o.get("type")); // should be changed again
     }
     
     @Test
@@ -88,11 +85,10 @@ public class TodoControllerTest {
         try {
             TodoController.moveItemFromTodoToRemoved(mock);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         JSONArray items = TodoController.getAllTodoAndDoneItems();
-        assertEquals(items.length(), 0);
+        assertEquals(0, items.length());
     }
     
     @AfterClass
