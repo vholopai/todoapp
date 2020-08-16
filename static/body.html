@@ -1,0 +1,80 @@
+
+	<!-- TODO item template -->	
+	<template>
+		<div class="card" id="0" style="display:none">
+			<h5 class="card-title"></h5>
+			<div class="card-body">
+				<p class="card-text" style="font-size: 150%"></p>
+				<button class="btn btn-lg btn-danger" 
+					onclick="removeTodo(this)"><i class="fas fa-trash"></i> Remove
+			    </button>
+			    <button class="btn btn-lg btn-info" 
+			    	onclick="setAsDone(this)"><i class="fas fa-check"></i> Set as DONE
+			    </button>
+			</div>
+		</div>
+	</template>
+			
+	<!-- DONE item template -->			
+	<template>
+		<div class="card" id="00" style="display:none">
+			<h5 class="card-title"></h5>
+			<div class="card-body">
+				<p class="card-text" style="font-size: 150%"></p>
+			    <button class="btn btn-lg btn-info" 
+			    	onclick="setAsTodo(this)"><i class="fas fa-check"></i> Set as TODO
+			    </button>
+			</div>
+		</div>
+	</template>
+		
+	<!-- Modal to add TODO item -->
+	<div class="modal fade" id="todoModal" tabindex="-1" role="dialog" aria-labelledby="todoModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h3 class="modal-title" id="todoModalLabel">Add new TODO item</h3>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	          			<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<textarea id="newTodoText" class="form-control" 
+						style="font-size: 150%; min-width: 100%" placeholder="Type TODO item text here..."></textarea>
+					<br>
+
+					<i class="fa fa-clock"></i> 					
+					<input type="text" id="timepicker1" placeholder="Deadline time (optional)" style="font-size: 150%"/>
+										
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-lg btn-secondary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-lg btn-primary" data-dismiss="modal" onclick="addTodo()">Add TODO</button>
+				</div>
+			</div>
+		</div>
+	</div>	
+		
+	<!-- Use two columns, one for TODO items, one for DONE items -->
+	<div class="container">
+		<div class="row">
+			<div class="col"> 
+				<h2>TODO</h2>
+				<!-- Button to open TODO adding modal -->
+				<button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#todoModal">
+					<i class="fas fa-plus"></i> Add TODO
+				</button>
+				<br><br>
+				<!-- Container for TODO items -->
+				<div id="todoItems">
+				</div>
+			</div>
+			<div class="col">
+				<h2>DONE</h2>
+				<br><br><br>
+				<!-- Container for DONE items -->							
+				<div id="doneItems">
+				</div>
+			</div>
+		</div>
+	</div>
