@@ -12,16 +12,21 @@
 		
 		<!-- needed for the date picker -->
 		<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
-		<link rel="stylesheet" type="text/css" media="all" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/smoothness/jquery-ui.css"    />		
+		<link rel="stylesheet" type="text/css" media="all" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/smoothness/jquery-ui.css"/>
+				
 		<script>
+			// Finnish format for dates
 			$(function(){
 				$("#datepicker").datepicker({ dateFormat: 'd.m.yy' });
 			});
 		</script>
 		
-		<!-- fix: https://stackoverflow.com/questions/4580727/override-jquery-ui-datepicker-div-visible-strangely-on-first-page-load -->
 		<style>
-			#ui-datepicker-div {display: none;}
+			/* fix: https://stackoverflow.com/questions/4580727/override-jquery-ui-datepicker-div-visible-strangely-on-first-page-load */	
+			#ui-datepicker-div { display: none; }
+			
+			/* make the date picker larger */
+			div.ui-datepicker { font-size:22px; }
 		</style>
 								
 	</head>
@@ -103,8 +108,10 @@
 			</div>
 		</div>
 	</div>
+	
 		
-	<!-- javascript code -->
+	<!-- AJAX code to modify the DOM, show the TODO/DONE items -->
+	
 	<script type="text/javascript">
 	
 		// send a HTTP POST request to the server
