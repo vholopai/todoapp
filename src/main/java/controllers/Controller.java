@@ -17,6 +17,10 @@ public class Controller {
         try (BufferedReader br = new BufferedReader(new FileReader(Constants.VIEWPATH + fileName))) {
             String line;
             while ((line = br.readLine()) != null) {
+                if (line.startsWith("replace=")) { 
+                    // template engine like way to add content from another file
+                    line = readTemplate(line.split("=")[1]); // recursive call
+                }
                 sb.append(line + "\n");
             }
         } catch (Exception e) {
