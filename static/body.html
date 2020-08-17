@@ -1,30 +1,46 @@
 
 	<!-- TODO item template -->	
 	<template>
-		<div class="card" id="0" style="display:none">
+		<div class="card" id="0" style="display:none; margin:20px; padding:5px">
 			<h5 class="card-title todo-id-nr"></h5>
 			<div class="card-body">
 				<p class="card-text" style="font-size: 150%"></p>
-				<button class="btn btn-lg btn-danger" 
-					onclick="removeTodo(this)"><i class="fas fa-trash"></i> Remove
-			    </button>
-			    <button class="btn btn-lg btn-info" 
-			    	onclick="setAsDone(this)"><i class="fas fa-check"></i> Set as DONE
-			    </button>
+			</div>
+			<div class="card-footer bg-white">
+				<div class="row">
+					<div class="col">
+						<button class="btn btn-lg btn-light" title="Remove"
+							onclick="removeTodo(this)"> &nbsp; <i class="fas fa-trash"></i> &nbsp;
+					    </button>
+					</div>
+					<div class="col">
+						<span class="float-md-right">
+					    <button class="btn btn-lg btn-success" title="Set as DONE"
+					    	onclick="setAsDone(this)"> &nbsp;&nbsp; <i class="fas fa-check"></i> &nbsp;&nbsp; 
+					    </button>
+					    </span>
+				    </div>
+			    </div>
 			</div>
 		</div>
 	</template>
 			
 	<!-- DONE item template -->			
 	<template>
-		<div class="card" id="00" style="display:none">
+		<div class="card" id="00" style="display:none; margin:20px; padding: 5px">
 			<h5 class="card-title todo-id-nr"></h5>
 			<div class="card-body">
 				<p class="card-text" style="font-size: 150%"></p>
-			    <button class="btn btn-lg btn-info" 
-			    	onclick="setAsTodo(this)"><i class="fas fa-check"></i> Set as TODO
-			    </button>
 			</div>
+			<div class="card-footer bg-white">
+				<div class="row">
+					<div class="col">
+					    <button class="btn btn-lg btn-light" title="Set as TODO"
+					    	onclick="setAsTodo(this)"> &nbsp;&nbsp; <i class="fas fa-arrow-left"></i> &nbsp;&nbsp; 
+					    </button>
+				    </div>
+			    </div>
+		    </div>
 		</div>
 	</template>
 		
@@ -48,8 +64,22 @@
 										
 				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-lg btn-secondary" data-dismiss="modal">Close</button>
-					<button type="button" class="btn btn-lg btn-primary" data-dismiss="modal" onclick="addTodo()">Add TODO</button>
+					<div class="container">
+					<div class="row">
+						<div class="col">				
+							<button type="button" class="btn btn-lg btn-light"
+								data-dismiss="modal"> &nbsp;&nbsp; <i class="fa fa-times"></i> &nbsp;&nbsp; </button>
+						</div>
+						<div class="col-6">				
+						</div>
+						<div class="col">	
+							<span class="float-md-right">
+								<button type="button" class="btn btn-lg btn-success"
+									data-dismiss="modal" onclick="addTodo()"> &nbsp;&nbsp; <i class="fa fa-save"></i> &nbsp;&nbsp; </button>
+							</span>
+						</div>
+					</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -61,8 +91,8 @@
 			<div class="col"> 
 				<h2>TODO</h2>
 				<!-- Button to open TODO adding modal -->
-				<button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#todoModal">
-					<i class="fas fa-plus"></i> Add TODO
+				<button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#todoModal" title="Add TODO">
+					&nbsp;&nbsp; <i class="fas fa-plus"></i> &nbsp;&nbsp;
 				</button>
 				<br><br>
 				<!-- Container for TODO items -->

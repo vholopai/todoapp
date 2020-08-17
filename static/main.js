@@ -75,15 +75,15 @@
 	}
 
 	function setAsDone(elem) {
-		post(getAllTodosCallback, failCallback, "/setAsDone", "text=" + elem.parentNode.parentNode.id);
+		post(getAllTodosCallback, failCallback, "/setAsDone", "text=" + elem.closest('.card').id);
 	}
 		
 	function setAsTodo(elem) {
-		post(getAllTodosCallback, failCallback, "/setAsTodo", "text=" + elem.parentNode.parentNode.id);
+		post(getAllTodosCallback, failCallback, "/setAsTodo", "text=" + elem.closest('.card').id);
 	}			
 
 	function removeTodo(elem) {
-		post(getAllTodosCallback, failCallback, "/removeTodo", "text=" + elem.parentNode.parentNode.id);
+		post(getAllTodosCallback, failCallback, "/removeTodo", "text=" + elem.closest('.card').id);
 	}			
 		
 	function addTodo() {
