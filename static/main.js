@@ -29,7 +29,9 @@
 		cloneDiv.getElementsByClassName('card-body')[0]
 			.getElementsByClassName('card-text')[0]
 				.innerHTML =
-					obj[key].msg.replace(/(?:\r\n|\r|\n)/g, '<br>');	
+					obj[key].msg
+						.replace(/Deadline:/g, '<strong>Deadline:</strong>')
+						.replace(/(?:\r\n|\r|\n)/g, '<br>');
 	}	
 	
 	function showDoneItem(doneDiv, obj, key) {
@@ -45,7 +47,9 @@
 		cloneDiv.getElementsByClassName('card-body')[0]
 			.getElementsByClassName('card-text')[0]
 				.innerHTML =
-					obj[key].msg.replace(/(?:\r\n|\r|\n)/g, '<br>');		
+					obj[key].msg
+						.replace(/Deadline:/g, '<strong>Deadline:</strong>')
+						.replace(/(?:\r\n|\r|\n)/g, '<br>');		
 	}
 		
 	// render the (todo and done) items we got from the server as JSON response
@@ -83,7 +87,10 @@
 	}			
 
 	function removeTodo(elem) {
-		post(getAllTodosCallback, failCallback, "/removeTodo", "text=" + elem.closest('.card').id);
+		var ret = confirm("Are you sure you want to remove this item?")
+		if (ret === true) {
+			post(getAllTodosCallback, failCallback, "/removeTodo", "text=" + elem.closest('.card').id);
+		}
 	}			
 		
 	function addTodo() {
