@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -27,31 +28,28 @@ public class TodoController extends Controller {
 
     static int readItemCount() {
         try (BufferedReader br = new BufferedReader(
-                new FileReader(Constants.TODOPATH + "counter.txt"))) 
+                new FileReader(Constants.TODOPATH + Constants.COUNTER_FILE))) 
         {
-            String line;
-            if ((line = br.readLine()) != null) {
-                return Integer.parseInt(line);
-            }
+            return Integer.parseInt(br.readLine());
         } catch (Exception e) {
-            lgr.error("Unable to read counter.txt");
+            lgr.error("Unable to read Constants.COUNTER_FILE");
         }
         return -1;
     }
     
     static void writeItemCount(int todoItemCount) {
         try (BufferedWriter wr = new BufferedWriter(
-                new FileWriter(Constants.TODOPATH + "counter.txt", false))) 
+                new FileWriter(Constants.TODOPATH + Constants.COUNTER_FILE, false))) 
         {
             wr.append(Integer.toString(todoItemCount)); // wr will be auto-closed in Java SE 7 and later
         } catch (IOException e) {
-            lgr.error("Unable to write counter.txt");
+            lgr.error("Unable to write Constants.COUNTER_FILE");
         }
     }
     
-    private static void writeTodoItemText(String text, int todoItemCount) {
+    private static void writeTodo(String text, int todoItemCount) {
         try (BufferedWriter wr = new BufferedWriter(
-                new FileWriter(Constants.TODOPATH + todoItemCount + ".todo", false))) 
+                new FileWriter(Constants.TODOPATH + todoItemCount + Constants.ITEM_FILE_EXT, false))) 
         {
             wr.append(text); // wr will be auto-closed in Java SE 7 and later
         } catch (IOException e) {
@@ -59,29 +57,24 @@ public class TodoController extends Controller {
         }
     }
     
-    private static JSONObject readItemFromFile(File file, String itemType) {
-        StringBuilder sb = new StringBuilder();
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-        } catch (Exception e) {
-            lgr.error("readItemFromFile unable to read {}", file.getAbsolutePath());
+    private static JSONObject itemToJson(Path file) {
+        JSONObject item = new JSONObject();
+        item.put("id", file.getFileName().toString().split("\\.")[0]); // items are in files, whose names are like "56.todo"
+        try {
+            item.put("msg", new String(Files.readAllBytes(file), System.getProperty("file.encoding")));
+        } 
+        catch (Exception e) {
+            lgr.error("readItemFromFile unable to read {}", file.toString());
             return null;
         }
-        JSONObject item = new JSONObject();
-        item.put("id", file.getName().split("\\.")[0]);
-        item.put("msg", sb.toString());
-        item.put("type", itemType);        
         return item;
     }
     
-    private static void getTodoItems(JSONArray items) {
+    private static void getTodos(JSONArray items) {
         File dir = new File(Constants.TODOPATH);
         List<String> todoFileNames = new ArrayList<>();
         for (File file : dir.listFiles()) {
-            if (file.getName().endsWith(".todo")) {
+            if (file.getName().endsWith(Constants.ITEM_FILE_EXT)) {
                 todoFileNames.add(file.getName());
             }
         }
@@ -92,18 +85,19 @@ public class TodoController extends Controller {
         List<String> sortedTodoFileNames = todoFileNames
                 .stream().sorted(Comparator.naturalOrder()).collect(Collectors.toList());
         for (String fileName : sortedTodoFileNames) {
-            JSONObject todoItem = readItemFromFile(new File(Constants.TODOPATH + fileName), "todo");
+            JSONObject todoItem = itemToJson(Paths.get(Constants.TODOPATH + fileName));
             if (todoItem != null) {
+                todoItem.put("type", "todo");
                 items.put(todoItem);
             }
         }
     }
     
-    private static void getDoneItems(JSONArray items) {
+    private static void getDones(JSONArray items) {
         File dir = new File(Constants.DONEPATH);
         List<String> doneFileNames = new ArrayList<>();
         for (File file : dir.listFiles()) {
-            if (file.getName().endsWith(".todo")) {
+            if (file.getName().endsWith(Constants.ITEM_FILE_EXT)) {
                 doneFileNames.add(file.getName());
             }
         }
@@ -112,49 +106,49 @@ public class TodoController extends Controller {
         List<String> sortedDoneFileNames = doneFileNames
                 .stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
         for (String fileName : sortedDoneFileNames) {
-            JSONObject doneItem = readItemFromFile(new File(Constants.DONEPATH + fileName), "done");
+            JSONObject doneItem = itemToJson(Paths.get(Constants.DONEPATH + fileName));
             if (doneItem != null) {
+                doneItem.put("type", "done");
                 items.put(doneItem);
             }
         }
     }
     
-    public static JSONArray getAllTodoAndDoneItems() {
+    public static JSONArray getTodosDones() {
         JSONArray items = new JSONArray();
-        getTodoItems(items);
-        getDoneItems(items);
+        getTodos(items);
+        getDones(items);
         return items;
     }
     
-    public static JSONArray createNewTodoItem(HttpServletRequest request) throws IOException {
+    public static JSONArray addTodo(HttpServletRequest request) throws IOException {
         int todoItemCount = readItemCount() + 1;
         if (todoItemCount < 1) { // unable to read item count?
             throw new IOException();
         }
-        String text = request.getParameter("text");
-        writeTodoItemText(text, todoItemCount);
+        writeTodo(request.getParameter("text"), todoItemCount);
         writeItemCount(todoItemCount);
-        return getAllTodoAndDoneItems();
+        return getTodosDones();
     }
     
-    public static JSONArray moveItemFromTodoToDone(HttpServletRequest request) throws IOException {
+    public static JSONArray todoToDone(HttpServletRequest request) throws IOException {
         int id = Integer.parseInt(request.getParameter("text"));
-        Files.move(Paths.get(Constants.TODOPATH + id + ".todo"),  
-                   Paths.get(Constants.DONEPATH + id + ".todo"));
-        return getAllTodoAndDoneItems();
+        Files.move(Paths.get(Constants.TODOPATH + id + Constants.ITEM_FILE_EXT),  
+                   Paths.get(Constants.DONEPATH + id + Constants.ITEM_FILE_EXT));
+        return getTodosDones();
     }
     
-    public static JSONArray moveItemFromDoneToTodo(HttpServletRequest request) throws IOException {
+    public static JSONArray doneToTodo(HttpServletRequest request) throws IOException {
         int id = Integer.parseInt(request.getParameter("text"));
-        Files.move(Paths.get(Constants.DONEPATH + id + ".todo"),  
-                   Paths.get(Constants.TODOPATH + id + ".todo"));
-        return getAllTodoAndDoneItems();
+        Files.move(Paths.get(Constants.DONEPATH + id + Constants.ITEM_FILE_EXT),  
+                   Paths.get(Constants.TODOPATH + id + Constants.ITEM_FILE_EXT));
+        return getTodosDones();
     }    
     
-    public static JSONArray moveItemFromTodoToRemoved(HttpServletRequest request) throws IOException {
+    public static JSONArray todoToRemoved(HttpServletRequest request) throws IOException {
         int id = Integer.parseInt(request.getParameter("text"));
-        Files.move(Paths.get(Constants.TODOPATH + id + ".todo"),  
-                   Paths.get(Constants.REMOVEDPATH + id + ".todo"));
-        return getAllTodoAndDoneItems();
+        Files.move(Paths.get(Constants.TODOPATH + id + Constants.ITEM_FILE_EXT),  
+                   Paths.get(Constants.REMOVEDPATH + id + Constants.ITEM_FILE_EXT));
+        return getTodosDones();
     }       
 }

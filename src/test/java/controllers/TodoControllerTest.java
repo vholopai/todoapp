@@ -35,7 +35,7 @@ public class TodoControllerTest {
         System.out.println(Constants.TODOPATH);
         HttpServletRequest mock = new MockRequest("text", "test todo content");
         try {
-            TodoController.createNewTodoItem(mock);
+            TodoController.addTodo(mock);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -45,7 +45,7 @@ public class TodoControllerTest {
     
     @Test
     public void b_checkThatAddedItemIsOk() {
-        JSONArray items = TodoController.getAllTodoAndDoneItems();
+        JSONArray items = TodoController.getTodosDones();
         JSONObject o = (JSONObject) items.get(0);
         assertTrue(o.get("msg").toString().startsWith("test todo content"));
         assertEquals("todo", o.get("type"));
@@ -55,11 +55,11 @@ public class TodoControllerTest {
     public void c_markItemAsDone() {
         HttpServletRequest mock = new MockRequest("text", "1");
         try {
-            TodoController.moveItemFromTodoToDone(mock);
+            TodoController.todoToDone(mock);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        JSONArray items = TodoController.getAllTodoAndDoneItems();
+        JSONArray items = TodoController.getTodosDones();
         JSONObject o = (JSONObject) items.get(0);
         assertTrue(o.get("msg").toString().startsWith("test todo content"));
         assertEquals("done", o.get("type")); // should be changed
@@ -69,11 +69,11 @@ public class TodoControllerTest {
     public void d_markItemAsTodo() {
         HttpServletRequest mock = new MockRequest("text", "1");
         try {
-            TodoController.moveItemFromDoneToTodo(mock);
+            TodoController.doneToTodo(mock);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        JSONArray items = TodoController.getAllTodoAndDoneItems();
+        JSONArray items = TodoController.getTodosDones();
         JSONObject o = (JSONObject) items.get(0);
         assertTrue(o.get("msg").toString().startsWith("test todo content"));
         assertEquals("todo", o.get("type")); // should be changed again
@@ -83,11 +83,11 @@ public class TodoControllerTest {
     public void e_removeTodo() {
         HttpServletRequest mock = new MockRequest("text", "1");
         try {
-            TodoController.moveItemFromTodoToRemoved(mock);
+            TodoController.todoToRemoved(mock);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        JSONArray items = TodoController.getAllTodoAndDoneItems();
+        JSONArray items = TodoController.getTodosDones();
         assertEquals(0, items.length());
     }
     

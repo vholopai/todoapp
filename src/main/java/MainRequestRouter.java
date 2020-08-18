@@ -43,28 +43,28 @@ public class MainRequestRouter extends AbstractHandler {
                 
             // JSON responses:
                 
-            case "/setAsTodo": // move a done task to todo
+            case "/setAsTodo": // move a task from done-state to todo-state
                 try { // in theory should never fail, but send 500 error if fails
                     response.getWriter().println(
-                            TodoController.moveItemFromDoneToTodo(request).toString());
+                            TodoController.doneToTodo(request).toString());
                 } catch (Exception e) {
                     response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);                    
                 }
                 break;                
 
-            case "/removeTodo": // move a todo task to REMOVED
+            case "/removeTodo": // move a task from todo-state to removed-state
                 try {
                     response.getWriter().println(
-                            TodoController.moveItemFromTodoToRemoved(request).toString());
+                            TodoController.todoToRemoved(request).toString());
                 } catch (Exception e) {
                     response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 }
                 break;
                 
-            case "/setAsDone": // move a todo task to DONE
+            case "/setAsDone": // move a task from todo-state to done-state
                 try {
                     response.getWriter().println(
-                            TodoController.moveItemFromTodoToDone(request).toString());
+                            TodoController.todoToDone(request).toString());
                 } catch (Exception e) {
                     response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 }
@@ -73,7 +73,7 @@ public class MainRequestRouter extends AbstractHandler {
             case "/addTodo":
                 try {
                     response.getWriter().println(
-                        TodoController.createNewTodoItem(request).toString());
+                        TodoController.addTodo(request).toString());
                 } catch (Exception e) {
                     response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 }
@@ -81,7 +81,7 @@ public class MainRequestRouter extends AbstractHandler {
                 
             case "/getAllTodos":
                 response.getWriter().println(
-                        TodoController.getAllTodoAndDoneItems().toString());
+                        TodoController.getTodosDones().toString());
                 break;
             
             default:
