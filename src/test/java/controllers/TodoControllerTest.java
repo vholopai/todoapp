@@ -44,7 +44,7 @@ public class TodoControllerTest {
     }
     
     @Test
-    public void b_checkThatAddedItemIsOk() {
+    public void b_checkThatAddedItemIsOk() throws IOException {
         JSONArray items = TodoController.getTodosDones();
         JSONObject o = (JSONObject) items.get(0);
         assertTrue(o.get("msg").toString().startsWith("test todo content"));
@@ -52,7 +52,7 @@ public class TodoControllerTest {
     }
     
     @Test
-    public void c_markItemAsDone() {
+    public void c_markItemAsDone() throws IOException {
         HttpServletRequest mock = new MockRequest("text", "1");
         try {
             TodoController.todoToDone(mock);
@@ -66,7 +66,7 @@ public class TodoControllerTest {
     }
     
     @Test
-    public void d_markItemAsTodo() {
+    public void d_markItemAsTodo() throws IOException {
         HttpServletRequest mock = new MockRequest("text", "1");
         try {
             TodoController.doneToTodo(mock);
@@ -80,7 +80,7 @@ public class TodoControllerTest {
     }
     
     @Test
-    public void e_removeTodo() {
+    public void e_removeTodo() throws IOException {
         HttpServletRequest mock = new MockRequest("text", "1");
         try {
             TodoController.todoToRemoved(mock);

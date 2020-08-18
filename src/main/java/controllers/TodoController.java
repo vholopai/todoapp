@@ -2,14 +2,12 @@ package controllers;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -70,22 +68,19 @@ public class TodoController extends Controller {
         return item;
     }
     
-    private static void getTodos(JSONArray items) {
-        File dir = new File(Constants.TODOPATH);
-        List<String> todoFileNames = new ArrayList<>();
-        for (File file : dir.listFiles()) {
-            if (file.getName().endsWith(Constants.ITEM_FILE_EXT)) {
-                todoFileNames.add(file.getName());
-            }
-        }
+    private static void getTodos(JSONArray items) throws IOException {
         // We want to show todo items in order always, so that OLDEST todo items (lowest ID number 
         // in file name) are shown first in list. Hence, sort the file name list 
         // (natural order, since item file names are of format 1.todo, 2.todo, ...),
         // and then read the file contents, and put to JSONArray in that order.
-        List<String> sortedTodoFileNames = todoFileNames
-                .stream().sorted(Comparator.naturalOrder()).collect(Collectors.toList());
-        for (String fileName : sortedTodoFileNames) {
-            JSONObject todoItem = itemToJson(Paths.get(Constants.TODOPATH + fileName));
+        List<Path> sortedTodoFileNames = 
+            Files.list(Paths.get(Constants.TODOPATH))
+                .filter(s -> s.toString().endsWith(Constants.ITEM_FILE_EXT))
+                .collect(Collectors.toList())
+                .stream().sorted(Comparator.naturalOrder()) // this is different in getDones
+                .collect(Collectors.toList());
+        for (Path fileName : sortedTodoFileNames) {
+            JSONObject todoItem = itemToJson(fileName);
             if (todoItem != null) {
                 todoItem.put("type", "todo");
                 items.put(todoItem);
@@ -93,20 +88,17 @@ public class TodoController extends Controller {
         }
     }
     
-    private static void getDones(JSONArray items) {
-        File dir = new File(Constants.DONEPATH);
-        List<String> doneFileNames = new ArrayList<>();
-        for (File file : dir.listFiles()) {
-            if (file.getName().endsWith(Constants.ITEM_FILE_EXT)) {
-                doneFileNames.add(file.getName());
-            }
-        }
+    private static void getDones(JSONArray items) throws IOException {
         // We want to show done items in order, so that NEWEST done items are shown first.
         // -> use reverseOrder
-        List<String> sortedDoneFileNames = doneFileNames
-                .stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList());
-        for (String fileName : sortedDoneFileNames) {
-            JSONObject doneItem = itemToJson(Paths.get(Constants.DONEPATH + fileName));
+        List<Path> sortedDoneFileNames = 
+                Files.list(Paths.get(Constants.DONEPATH))
+                    .filter(s -> s.toString().endsWith(Constants.ITEM_FILE_EXT))
+                    .collect(Collectors.toList())
+                    .stream().sorted(Comparator.reverseOrder()) // this is different in getTodos
+                    .collect(Collectors.toList());
+        for (Path fileName : sortedDoneFileNames) {
+            JSONObject doneItem = itemToJson(fileName);
             if (doneItem != null) {
                 doneItem.put("type", "done");
                 items.put(doneItem);
@@ -114,7 +106,7 @@ public class TodoController extends Controller {
         }
     }
     
-    public static JSONArray getTodosDones() {
+    public static JSONArray getTodosDones() throws IOException {
         JSONArray items = new JSONArray();
         getTodos(items);
         getDones(items);
