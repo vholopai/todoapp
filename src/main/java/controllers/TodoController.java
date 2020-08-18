@@ -64,7 +64,7 @@ public class TodoController extends Controller {
             item.put("msg", new String(Files.readAllBytes(file), System.getProperty("file.encoding")));
         } 
         catch (Exception e) {
-            lgr.error("readItemFromFile unable to read {}", file.toString());
+            lgr.error("itemToJson unable to read {}", file.toString());
             return null;
         }
         return item;
