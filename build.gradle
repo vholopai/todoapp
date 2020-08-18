@@ -18,10 +18,10 @@ dependencies {
 	// Use JUnit test framework
 	testImplementation 'junit:junit:4.12'
     
-	// provides the HTTP request object for the code
+	// Only needed for the jetty "handle" method signature, not used for creating servlets
 	compile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
     
-	// the web server
+	// The actual HTTP web server
 	compile group: 'org.eclipse.jetty', name: 'jetty-server', version: '9.4.31.v20200723'
 	
 	// logging
@@ -29,10 +29,10 @@ dependencies {
 	compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.3'
 	compile group: 'org.apache.logging.log4j', name: 'log4j-web', version: '2.13.3'
 	
-	// json
+	// JSON creation
 	compile group: 'org.json', name: 'json', version: '20180813'   
 	
-	// for end-to-end junit tests
+	// For end-to-end junit tests
 	compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.12'
 	 
 }
