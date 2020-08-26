@@ -20,7 +20,9 @@ import org.junit.runners.MethodSorters;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlButton;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlTextArea;
 
 import router.MainRequestRouter;
 import router.MainRequestRouterTest;
@@ -50,7 +52,16 @@ public class TodoControllerTest {
     @Test
     public void a_addTodoTest() throws FailingHttpStatusCodeException, MalformedURLException, IOException {
         try (final WebClient webClient = new WebClient()) {
-            webClient.getPage("http://localhost/addTodo?text=test todo content");
+            webClient.getOptions().setThrowExceptionOnScriptError(true);
+            webClient.getOptions().setCssEnabled(false);
+            webClient.getOptions().setJavaScriptEnabled(true);
+            final HtmlPage page = webClient.getPage("http://localhost/");
+            HtmlTextArea intputBox = page.getHtmlElementById("newTodoText");
+            intputBox.setText("test todo content");
+            HtmlButton htmlButton = page.getHtmlElementById("newTodoBtn");
+            htmlButton.click();
+            // wait for AJAX
+            webClient.waitForBackgroundJavaScript(500);
         }
         int itemCount = TodoController.readItemCount();
         assertEquals(1, itemCount);
