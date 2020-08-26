@@ -50,12 +50,20 @@ public class TodoControllerTest {
     @Test
     public void a_addTodoTest() throws FailingHttpStatusCodeException, MalformedURLException, IOException {
         try (final WebClient webClient = new WebClient()) {
-            HtmlPage page = webClient.getPage("http://localhost/");
-            assertEquals("TODO app", page.getTitleText());  
             webClient.getPage("http://localhost/addTodo?text=test todo content");
         }
         int itemCount = TodoController.readItemCount();
         assertEquals(1, itemCount);
+        try (final WebClient webClient = new WebClient()) {
+            webClient.getOptions().setThrowExceptionOnScriptError(false);
+            webClient.getOptions().setCssEnabled(false);
+            webClient.getOptions().setJavaScriptEnabled(true);
+            HtmlPage page = webClient.getPage("http://localhost/");
+            // wait for AJAX
+            webClient.waitForBackgroundJavaScript(500);
+            // fetched with AJAX
+            assertTrue(page.getBody().asText().contains("test todo content"));
+        }
     }
     
     @Test
