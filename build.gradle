@@ -33,7 +33,6 @@ dependencies {
 	compile group: 'org.json', name: 'json', version: '20180813'   
 	
 	// For end-to-end junit tests
-	compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.12'
-	 
+	compile group: 'net.sourceforge.htmlunit', name: 'htmlunit', version: '2.43.0'
 }
 

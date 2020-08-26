@@ -5,9 +5,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.AfterClass;
@@ -15,13 +18,27 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+
+import router.MainRequestRouter;
+import router.MainRequestRouterTest;
 import utils.Constants;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 
 public class TodoControllerTest {
-    
+    private static Logger lgr;
+
     static {
+        if (!router.MainRequestRouter.isRunning) {
+            MainRequestRouter.initLogger();
+            lgr = LogManager.getLogger(MainRequestRouterTest.class);
+            MainRequestRouter.lgr = LogManager.getLogger(MainRequestRouter.class);
+            lgr.info("Starting...");
+            (new MainRequestRouter()).run();         
+        }
         Constants.TODOPATH = "./" + File.separator + "data_test" + File.separator + "todo" + File.separator;
         Constants.DONEPATH = "./" + File.separator + "data_test" + File.separator + "done" + File.separator;    
         Constants.REMOVEDPATH = "./" + File.separator + "data_test" + File.separator + "removed" + File.separator;           
@@ -31,13 +48,11 @@ public class TodoControllerTest {
     }
 
     @Test
-    public void a_addTodoTest() {
-        System.out.println(Constants.TODOPATH);
-        HttpServletRequest mock = new MockRequest("text", "test todo content");
-        try {
-            TodoController.addTodo(mock);
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void a_addTodoTest() throws FailingHttpStatusCodeException, MalformedURLException, IOException {
+        try (final WebClient webClient = new WebClient()) {
+            HtmlPage page = webClient.getPage("http://localhost/");
+            assertEquals("TODO app", page.getTitleText());  
+            webClient.getPage("http://localhost/addTodo?text=test todo content");
         }
         int itemCount = TodoController.readItemCount();
         assertEquals(1, itemCount);

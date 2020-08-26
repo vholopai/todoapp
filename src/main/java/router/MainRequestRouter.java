@@ -1,3 +1,4 @@
+package router;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -19,8 +20,9 @@ import controllers.TodoController;
 
 public class MainRequestRouter extends AbstractHandler {
     
-    static Logger lgr;
+    public static Logger lgr;
     private static final int PORT = 80;
+    public static boolean isRunning = false;
     
     /**
      * HTTP requests coming from the user are handled in this method
@@ -103,6 +105,7 @@ public class MainRequestRouter extends AbstractHandler {
         server.setHandler(this);
         try {
             server.start();
+            isRunning = true;
         } catch (Exception e) {
             lgr.error("Unable to start server", e);
         }
@@ -111,7 +114,7 @@ public class MainRequestRouter extends AbstractHandler {
     /**
      * Just an example logger configuration. Change to FileAppender if needed.
      */
-     static void initLogger() {
+     public static void initLogger() {
         Properties properties = new Properties();
         properties.setProperty("status", "INFO");
         properties.setProperty("appenders", "CONSOLE");
